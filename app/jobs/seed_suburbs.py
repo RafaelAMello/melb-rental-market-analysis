@@ -11,7 +11,7 @@ class SeedDatabase:
         'Southbank' : 3006,
         'St Kilda' : 3182,
         'North Melbourne' : 3051,
-        'Fitztoy' : 3065,
+        'Fitzroy' : 3065,
         'South Melbourne' : 3205,
         'Hawthorn' : 3122,
         'Richmond' : 3121,
