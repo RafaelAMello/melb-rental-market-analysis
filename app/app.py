@@ -10,7 +10,7 @@ def scrape_suburb(suburb):
     scraper.scrape_suburb(suburb)
 
 def get_all_suburbs():
-    pool = mp.Pool(1)
+    pool = mp.Pool(5)
     suburbs = models.Session().query(models.Suburb).all()
     pool.map(scrape_suburb, suburbs)
 
