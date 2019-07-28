@@ -2,6 +2,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from app import models
 import logging
+from time import sleep
 from sqlalchemy.exc import IntegrityError
 
 logging_format = '%(asctime)s: %(levelname)s - %(message)s'
@@ -19,7 +20,7 @@ class FlatmatesSuburbScrapper:
         try:
             self._get_page_info_for(suburb.name, suburb.postcode)
             while self.next_page_clickable:
-                self.processs_page()
+                self.process_page()
                 self.get_next_page()
         except Exception as ex:
             raise ex
@@ -30,8 +31,9 @@ class FlatmatesSuburbScrapper:
         if self.enabled_cookies:
             logging.info("Clicking Next Page")
             self.next_page_button.click()
+            sleep(5)
             
-    def processs_page(self):
+    def process_page(self):
         raw_page_data = BeautifulSoup(self.web.page_source)
         processed_listings = self._process_page_data(raw_page_data)
         for listing in processed_listings:
@@ -54,10 +56,10 @@ class FlatmatesSuburbScrapper:
         return raw_listing.div.a['href']
     
     def _get_page_info_for(self, suburb, postcode):
-        logging.info(f"Getting Page Info for {self._trasform_url(suburb, postcode)}")
-        self.web.get(self._trasform_url(suburb, postcode))
+        logging.info(f"Getting Page Info for {self._transform_url(suburb, postcode)}")
+        self.web.get(self._transform_url(suburb, postcode))
         
-    def _trasform_url(self, suburb, postcode):
+    def _transform_url(self, suburb, postcode):
         suburb_proper = '-'.join(suburb.split()).lower()
         return self.BASE_URL + f'{suburb_proper}-{postcode}'
     
