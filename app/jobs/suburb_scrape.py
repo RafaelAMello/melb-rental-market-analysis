@@ -15,6 +15,7 @@ class FlatmatesSuburbScrapper:
         self._enabled_cookies = False
     
     def scrape_suburb(self, suburb):
+        self.suburb_name = suburb.name
         try:
             self._get_page_info_for(suburb.name, suburb.postcode)
             while self.next_page_clickable:
@@ -39,7 +40,7 @@ class FlatmatesSuburbScrapper:
     def _save_listing(self, listing_url):
         try:
             sess = models.Session()
-            sess.add(models.Listing(listing_url))
+            sess.add(models.Listing(listing_url, self.suburb_name))
             sess.commit()
         except IntegrityError:
             pass
