@@ -2,6 +2,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from app import models
 import logging
+from sqlalchemy.exc import IntegrityError
 
 logging_format = '%(asctime)s: %(levelname)s - %(message)s'
 logging.basicConfig(level = logging.INFO, format=logging_format)
@@ -36,9 +37,12 @@ class FlatmatesSuburbScrapper:
             self._save_listing(listing)
 
     def _save_listing(self, listing_url):
-        sess = models.Session(models.Listing(listing_url))
-        sess.add(sess)
-        sess.commit()
+        try:
+            sess = models.Session()
+            sess.add(models.Listing(listing_url))
+            sess.commit()
+        except IntegrityError:
+            pass
         
     def _process_page_data(self, raw_page_data):
         listings = [self._process_listing(raw_listing) for raw_listing in raw_page_data.find_all('div', {'class' : 'content-column'})]
