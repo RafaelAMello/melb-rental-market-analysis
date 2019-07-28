@@ -8,3 +8,6 @@ class Listing(Base):
     url        = Column(String, primary_key=True, unique=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, onupdate=datetime.utcnow)
+
+    def __init__(self, url):
+        self.url = url
