@@ -10,7 +10,6 @@ class Listing(Base):
     created_at   = Column(DateTime, default=datetime.utcnow)
     updated_at   = Column(DateTime, onupdate=datetime.utcnow)
     suburb_name  = Column(String, ForeignKey('suburb.name'))
-    suburb       = relationship("suburb")
 
     def __init__(self, url, suburb_name):
         self.url = url

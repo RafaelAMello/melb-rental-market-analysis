@@ -10,7 +10,7 @@ class Suburb(Base):
     postcode     = Column(Integer)
     created_at   = Column(DateTime, default=datetime.utcnow)
     updated_at   = Column(DateTime, onupdate=datetime.utcnow)
-    listings     = relationship("listing")
+    listings     = relationship("Listing")
 
     def __init__(self, name, postcode):
         self.name = name
