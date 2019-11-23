@@ -16,9 +16,8 @@ class FlatmatesSuburbScrapper:
         self._enabled_cookies = False
     
     def scrape_suburb(self, suburb):
-        self.suburb_name = suburb.name
         try:
-            self._get_page_info_for(suburb.name, suburb.postcode)
+            self._get_page_info_for(suburb)
             while self.next_page_clickable:
                 self.process_page()
                 self.get_next_page()
@@ -34,9 +33,8 @@ class FlatmatesSuburbScrapper:
             sleep(5)
             
     def process_page(self):
-        raw_page_data = BeautifulSoup(self.web.page_source)
-        processed_listings = self._process_page_data(raw_page_data)
-        for listing in processed_listings:
+        listings = self._process_page_data(BeautifulSoup(self.web.page_source))
+        for listing in listings:
             self._save_listing(listing)
 
     def _save_listing(self, listing_url):
@@ -55,13 +53,9 @@ class FlatmatesSuburbScrapper:
     def _process_listing(self, raw_listing):
         return raw_listing.div.a['href']
     
-    def _get_page_info_for(self, suburb, postcode):
-        logging.info(f"Getting Page Info for {self._transform_url(suburb, postcode)}")
-        self.web.get(self._transform_url(suburb, postcode))
-        
-    def _transform_url(self, suburb, postcode):
-        suburb_proper = '-'.join(suburb.split()).lower()
-        return self.BASE_URL + f'{suburb_proper}-{postcode}'
+    def _get_page_info_for(self, suburb):
+        logging.info(f"Getting Page Info for {suburb.slug}")
+        self.web.get(self.BASE_URL + suburb.slug)
     
     def _enable_cookies(self):
         logging.info("Enabling Cookies")

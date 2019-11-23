@@ -18,3 +18,8 @@ class Suburb(Base):
 
     def __repr__(self):
         return f"Suburb({self.name}, {self.postcode})"
+
+    @property
+    def slug(self):
+        name_slug = '-'.join(self.name.split()).lower()
+        return f'{name_slug}-{self.postcode}'
